@@ -35,8 +35,8 @@
     this.updater = this.options.updater || this.updater
     this.$menu = $(this.options.menu).appendTo('body')
     this.source = this.options.source
+    this.useTags = this.options.useTags || false
     this.shown = false
-    this.useTags = true
     this.listen()
   }
 
@@ -49,10 +49,22 @@
       this.$element
         .val(this.updater(val))
         .change()
+      this.after()
       return this.hide()
     }
 
+  , after: function() {
+      this.$element.caret("#" + this.lastItem, true)
+    }
+
   , updater: function (item) {
+      if (this.useTags) {
+        var lastPart = this.getTag()
+        var position = this.$element.caret()
+        var strAfter = this.query.substring(position, this.query.length)
+        this.lastItem = item
+        return this.query = this.query.substring(0, position - lastPart.length) + "#" + strAfter
+      }
       return item
     }
 
