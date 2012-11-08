@@ -215,7 +215,7 @@ $(function () {
 
         equals(typeahead.$menu.find('li').length, 1, 'has 1 items in menu')
 
-        $input.val('#beard')
+        $input.val('#xxx')
         typeahead.lookup()
 
         equals(typeahead.$menu.find('li').length, 0, 'has 0 items in menu')

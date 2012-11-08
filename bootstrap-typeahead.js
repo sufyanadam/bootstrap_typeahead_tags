@@ -36,7 +36,7 @@
     this.$menu = $(this.options.menu).appendTo('body')
     this.source = this.options.source
     this.shown = false
-    this.useTags = false
+    this.useTags = true
     this.listen()
   }
 
@@ -108,21 +108,32 @@
     }
 
   , getTag: function() {
-      var parts = this.query.split(/\s+/);
+      var cursor_position = this.$element.caret()
+      var before_cursor = this.query.substring(0, cursor_position)
+      var after_cursor = this.query.substring(cursor_position, this.query.length)
+      if (after_cursor[0] !== undefined &&
+          /^[a-zA-Z0-9]+$/.test(after_cursor[0])) {
+        return ""
+      }
+
+      var parts = before_cursor.split(/\s+/);
       var regex = /(^\#|\s\#)([a-z0-9]+)/gi;
 
-      var hashtags = parts[parts.length - 1].match(regex);
-      if (hashtags !== undefined) {
+      var hashtags = parts[parts.length - 1].match(regex) || [];
+      if (hashtags !== undefined && hashtags !== null) {
         if (hashtags.length > 0) {
-          return true
+          return $.trim(hashtags[hashtags.length - 1])
         }
       }
-      return false
+      return ""
     }
 
   , matcher: function (item) {
       if (this.useTags) {
-        lastTag = this.getTag()
+        var lastPart = this.getTag()
+        if (lastPart.substring(0, 1) === "#") {
+          return ~item.toLowerCase().indexOf(lastPart.substring(1))
+        }
       }
       return ~item.toLowerCase().indexOf(this.query.toLowerCase())
     }
@@ -314,6 +325,7 @@
   , menu: '<ul class="typeahead dropdown-menu"></ul>'
   , item: '<li><a href="#"></a></li>'
   , minLength: 1
+  , useTags: false
   }
 
   $.fn.typeahead.Constructor = Typeahead
