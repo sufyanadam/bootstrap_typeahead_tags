@@ -12,7 +12,9 @@ Modification of Bootstrap Typeahead for Bottle.io.
 
     $('#entry-submit').typeahead({
       source: tags,
-      useTags: true
+      useTags: true,
+      symbol: "#"       # Define hashtag symbol, by default '#'
     });
 
 *Warning*: setting `useTags` to true, will exclusively work with tags.
+
