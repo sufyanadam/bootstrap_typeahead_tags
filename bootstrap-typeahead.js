@@ -148,8 +148,9 @@
         if (lastPart.substring(0, 1) === "#") {
           return ~item.toLowerCase().indexOf(lastPart.substring(1))
         }
+      } else {
+        return ~item.toLowerCase().indexOf(this.query.toLowerCase())
       }
-      return ~item.toLowerCase().indexOf(this.query.toLowerCase())
     }
 
   , sorter: function (items) {
