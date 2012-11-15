@@ -171,9 +171,7 @@
   , highlighter: function (item) {
       var query = this.query
       if (this.useTags) {
-        if (this.query.substring(0, 1) === this.symbol) {
-          query = query.substring(1).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-        }
+        query = query.substring(1).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
       } else {
         query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
       }
