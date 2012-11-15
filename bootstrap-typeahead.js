@@ -127,7 +127,7 @@
       var after_cursor = this.query.substring(cursor_position, this.query.length)
       if (after_cursor[0] !== undefined &&
           /^[a-zA-Z0-9]+$/.test(after_cursor[0])) {
-        return ""
+        return null
       }
 
       var parts = before_cursor.split(/\s+/);
@@ -145,7 +145,7 @@
   , matcher: function (item) {
       if (this.useTags) {
         var lastPart = this.getTag()
-        if (lastPart.substring(0, 1) === "#") {
+        if (lastPart.substring(0, 1) === this.symbol) {
           return ~item.toLowerCase().indexOf(lastPart.substring(1))
         }
       } else {
@@ -171,7 +171,9 @@
   , highlighter: function (item) {
       var query = this.query
       if (this.useTags) {
-        query = query.substring(1).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+        if (this.query.substring(0, 1) === this.symbol) {
+          query = query.substring(1).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+        }
       } else {
         query = query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
       }

@@ -205,6 +205,11 @@ $(function () {
             })
           , typeahead = $input.data('typeahead')
 
+        $input.val('')
+        typeahead.lookup()
+
+        equals(typeahead.$menu.find('li').length, 0, 'has 0 items in menu')
+
         $input.val('#a')
         typeahead.lookup()
 
@@ -215,10 +220,16 @@ $(function () {
 
         equals(typeahead.$menu.find('li').length, 1, 'has 1 items in menu')
 
-        $input.val('#xxx')
+        $input.val('')
         typeahead.lookup()
 
-        equals(typeahead.$menu.find('li').length, 0, 'has 0 items in menu')
+        equals(typeahead.$menu.is(":visible"), false, 'menu is not visible')
+
+        $input.val('a')
+        typeahead.lookup()
+
+        equals(typeahead.$menu.find('li').length, 1, 'has 1 items in menu')
+        equals(typeahead.$menu.is(":visible"), false, 'menu is not visible')
 
         typeahead.$menu.remove()
 
