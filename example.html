@@ -1,0 +1,21 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+
+  <script type="text/javascript" charset="utf-8" src="tests/vendor/jquery.js" ></script>
+  <script type="text/javascript" charset="utf-8" src="tests/vendor/jquery.caret.js" ></script>
+  <script type="text/javascript" charset="utf-8" src="bootstrap-typeahead.js" ></script>
+  <title>Example</title>
+  
+</head>
+<body>
+  <input type="text" name="example" id="example" value="" />
+
+  <script type="text/javascript" charset="utf-8">
+    $('#example').typeahead({
+      source: ["bla", "test", "blam", "longer", "some", "restful", "testful", "dead", "beat"],
+      useTags: true
+    });
+  </script>
+</body>
+</html>
