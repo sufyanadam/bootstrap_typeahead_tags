@@ -4,9 +4,6 @@
  * =============================================================
  * Copyright 2012 Twitter, Inc.
  *
- * Modified by Iteration Labs, LLC and Mavenlink, Inc. to add tag 
- * autocompletion in textareas.
- *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -38,10 +35,6 @@
     this.updater = this.options.updater || this.updater
     this.source = this.options.source
     this.$menu = $(this.options.menu)
-    this.useTags = this.options.useTags || false
-    this.symbol = this.options.symbol || "#"
-    this.escapedSymbol = this.symbol.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-    this.tagRegex = new RegExp("(^" + this.escapedSymbol + "|\\s" + this.escapedSymbol + ")([a-z0-9]+)", "gi");
     this.shown = false
     this.listen()
   }
@@ -51,20 +44,10 @@
     constructor: Typeahead
 
   , select: function () {
-      var selection = this.$menu.find('.active').attr('data-value'),
-          updatedSelection = this.updater(selection)
-
-      if (this.useTags) { 
-        var partialTag = this.getTag(),
-            position = this.$element.caret().start,
-            strAfter = this.query.substring(position, this.query.length),
-            uptoNewCursor = this.query.substring(0, position - partialTag.length) + this.symbol + updatedSelection
-        this.$element.val(uptoNewCursor + strAfter).change()
-        this.$element.caret({start: uptoNewCursor.length, end: uptoNewCursor.length})
-      } else {
-        this.$element.val(updatedSelection).change()
-      }
-
+      var val = this.$menu.find('.active').attr('data-value')
+      this.$element
+        .val(this.updater(val))
+        .change()
       return this.hide()
     }
 
@@ -125,33 +108,8 @@
       return this.render(items.slice(0, this.options.items)).show()
     }
 
-  , getTag: function() {
-      var cursor_position = this.$element.caret().start
-      var before_cursor = this.query.substring(0, cursor_position)
-      var after_cursor = this.query.substring(cursor_position, this.query.length)
-      if (after_cursor[0] !== undefined &&
-          /^[a-zA-Z0-9]+$/.test(after_cursor[0])) {
-        return null
-      }
-      var parts = before_cursor.split(/\s+/);
-      var hashtags = parts[parts.length - 1].match(this.tagRegex) || [];
-      if (hashtags !== undefined && hashtags !== null) {
-        if (hashtags.length > 0) {
-          return $.trim(hashtags[hashtags.length - 1])
-        }
-      }
-      return ""
-    }
-
   , matcher: function (item) {
-      if (this.useTags) {
-        var lastPart = this.getTag()
-        if (lastPart && lastPart.substring(0, 1) === this.symbol) {
-          return ~item.toLowerCase().indexOf(lastPart.substring(1))
-        }
-      } else {
-        return ~item.toLowerCase().indexOf(this.query.toLowerCase())
-      }
+      return ~item.toLowerCase().indexOf(this.query.toLowerCase())
     }
 
   , sorter: function (items) {
@@ -170,12 +128,7 @@
     }
 
   , highlighter: function (item) {
-      var query = this.query
-      if (this.useTags) {
-        query = query.substring(1).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-      } else {
-        query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-      }
+      var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
       return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
         return '<strong>' + match + '</strong>'
       })
@@ -343,8 +296,6 @@
   , menu: '<ul class="typeahead dropdown-menu"></ul>'
   , item: '<li><a href="#"></a></li>'
   , minLength: 1
-  , symbol: "#"
-  , useTags: false
   }
 
   $.fn.typeahead.Constructor = Typeahead

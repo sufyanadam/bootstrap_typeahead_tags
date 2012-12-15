@@ -5,16 +5,18 @@
   <script type="text/javascript" charset="utf-8" src="tests/vendor/jquery.js" ></script>
   <script type="text/javascript" charset="utf-8" src="tests/vendor/jquery.caret.js" ></script>
   <script type="text/javascript" charset="utf-8" src="bootstrap-typeahead.js" ></script>
+  <link rel="stylesheet" type="text/css" href="minimal-css.css">
   <title>Example</title>
   
 </head>
 <body>
-  <input type="text" name="example" id="example" value="" />
+  <textarea name="example" id="example"></textarea>
 
   <script type="text/javascript" charset="utf-8">
     $('#example').typeahead({
       source: ["bla", "test", "blam", "longer", "some", "restful", "testful", "dead", "beat"],
-      useTags: true
+      useTags: true,
+      symbol: "@"
     });
   </script>
 </body>
